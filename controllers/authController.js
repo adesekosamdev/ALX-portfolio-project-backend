@@ -7,7 +7,8 @@ const blacklistedTokens = require('../middleware/blacklist')
 exports.register = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const username = "";
+    // bug to be fixed here (valiadation errors bc username is set to be unique)
+    const username = "1";
     const user = await User.create({ username, email, password });
     console.log('Registration successful');
     res.status(201).json(user);

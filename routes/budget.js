@@ -7,37 +7,49 @@ const validate = require('../middleware/validation');
 const auth = require('../middleware/auth');
 
 // Create a new budget
-router.post('/',
+router.post('/create',
 	[
 		auth,
 		body('userId').isInt().withMessage('User ID must be an integer'),
-		body('title').notEmpty().withMessage('Title is required'),
-		body('amount').isFloat({ gt: 0 }).withMessage('Amount must be a positive number'),
-		body('details').notEmpty().withMessage('Details are required')
+		body('name').notEmpty().withMessage('Name is required'),
+		body('totalAmount').isFloat({ gt: 0 }).withMessage('Total amount must be a positive number'),
+		body('description').notEmpty().withMessage('Description is required')
 	],
 	validate,
 	budgetController.createBudget
 );
 
+// i need to update here, there are bugs with param (budgetId)
 // Update an existing budget
-router.put('/:id', 
+router.put('/:budgetId', 
 	[
 		auth,
-		param('id').isInt().withMessage('Budget ID must be an integer'),
-		body('title').notEmpty().withMessage('Title is required'),
-		body('amount').isFloat({ gt: 0 }).withMessage('Amount must be a positive number'),
-		body('details').notEmpty().withMessage('Details are required')
+		param('budgetId').isInt().withMessage('Budget ID must be an integer'),
+		body('name').notEmpty().withMessage('Name is required'),
+		body('totalAmount').isFloat({ gt: 0 }).withMessage('Total amount must be a positive number'),
+		body('description').notEmpty().withMessage('Description is required')
 	],
 	validate,
-	budgetController.updateBudget);
+	budgetController.updateBudget
+);
 
 // Delete a budget
-router.delete('/:id', [param('id').isInt().withMessage('Budget ID must be an integer')], validate, budgetController.deleteBudget);
+router.delete('/:budgetId', [param('budgetId').isInt().withMessage('Budget ID must be an integer')], validate, budgetController.deleteBudget);
 
 // List all budgets
 router.get('/', 
 	auth,
 	budgetController.getAllBudgets
+);
+
+// List all budgets for a particular user
+router.get('/uBudgets/:userId', 
+	[
+		auth,
+		param('userId').isInt().withMessage('User ID must be an integer'),
+	],
+	validate,
+	budgetController.getAllUserBudgets
 );
 
 module.exports = router;

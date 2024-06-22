@@ -41,4 +41,15 @@ router.get('/',
 	userController.getAllUsers
 );
 
+// get user info
+router.get('/user-info', 
+	auth, (req, res) => {
+    // Assuming `req.user` has the user info from the JWT token
+    res.json({
+        userId: req.user.userId,
+        // email: req.user.email,
+        // name: req.user.name
+    });
+});
+
 module.exports = router;
